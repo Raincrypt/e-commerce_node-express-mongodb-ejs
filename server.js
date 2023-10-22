@@ -1,12 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const app = express();
 
 const port = process.env.port || 5000;
-const uri =
-  "";
+const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.jvfh68q.mongodb.net/?retryWrites=true&w=majority`;
 
 // Contect DB
 mongoose
@@ -23,8 +23,13 @@ app.set("views", __dirname + "/views/pages");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// Render Signin/Login Page
+app.get("/", (req, res) => {
+  res.render("index.ejs");
+});
+
 // Routes
-app.use("/", require("./routes/userRoute"));
+app.use("/auth", require("./routes/userRoutes"));
 
 // Setup the server
 app.listen(port, () => {
