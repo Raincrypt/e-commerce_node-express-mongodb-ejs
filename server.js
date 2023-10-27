@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const app = express();
 
-const port = process.env.port || 5000;
+const port = process.env.PORT || 5000;
 const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.jvfh68q.mongodb.net/?retryWrites=true&w=majority`;
 
 // Contect DB
@@ -25,11 +25,12 @@ app.use(express.static("public"));
 
 // Render Signin/Login Page
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.render("signup.ejs");
 });
 
 // Routes
-app.use("/auth", require("./routes/userRoutes"));
+app.use("/auth", require("./routes/user"));
+app.use("/", require("./routes/dashboard"));
 
 // Setup the server
 app.listen(port, () => {
