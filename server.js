@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
+
+const { restrictToLoggedUserOnly } = require("./middlewares/auth");
 
 const app = express();
 
@@ -22,15 +25,16 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views/pages");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(cookieParser());
 
 // Render Signin/Login Page
-app.get("/", (req, res) => {
+app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
 
 // Routes
 app.use("/auth", require("./routes/user"));
-app.use("/", require("./routes/dashboard"));
+app.use("/", restrictToLoggedUserOnly, require("./routes/dashboard"));
 
 // Setup the server
 app.listen(port, () => {
